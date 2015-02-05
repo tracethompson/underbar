@@ -176,7 +176,6 @@
     describe('uniq', function() {
       it('should return all unique values contained in an unsorted array', function() {
         var numbers = [1, 2, 1, 3, 1, 4];
-
         expect(_.uniq(numbers)).to.eql([1, 2, 3, 4]);
       });
 
