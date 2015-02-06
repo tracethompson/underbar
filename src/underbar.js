@@ -217,7 +217,7 @@
     var result = true;
     var resultlog = [];
     _.each(collection, function(item, index){
-      return resultlog.push(Boolean(item));
+      return resultlog.push(Boolean(iterator(item)));
     });
     if(_.contains(resultlog, true)){
       result = true;
@@ -307,9 +307,25 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
 
-  //        HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //        
   _.memoize = function(func) {
-   };
+    var store = {};
+    var counter = 0;
+
+    return function(){
+      var trip = func.apply(this, arguments);
+      if(_.identity(trip) === (_.contains(store, _.identity(trip.counter)))){
+        console.log("fuckoff");
+      }
+      if(_.contains(store, trip.counter)){
+          return store[trip];
+      } else{
+        return store[counter] = trip;
+        counter ++;
+      }
+    }  
+  };
+
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -318,6 +334,9 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    return setTimeout(function(){ 
+      return func.apply(this, arguments); 
+    }, wait);
   };
 
 
