@@ -309,21 +309,21 @@
 
   //        
   _.memoize = function(func) {
-    var store = {};
-    var counter = 0;
-
-    return function(){
-      var trip = func.apply(this, arguments);
-      if(_.identity(trip) === (_.contains(store, _.identity(trip.counter)))){
-        console.log("fuckoff");
+    var cached = {};
+      return function(){
+      /*JSON is a very lightweight (called XML with anorexia) syntax for data-interchange.
+      JSON.stringify will convert an JavaScript object to a JSON string
+      Arguments is a variable that is put into the namespace environment when a fucntion is run
+      It's just included in JavaScript design.
+      You can find out the number of arguments of a function by saying arguments.length for example.
+      So JSON.stringify converts the arguments variable to a JSON string, "serializing" the data (not really)
+      To serialize means to convert an object or a more complex structure to it's bytes. */
+      var argString = JSON.stringify(arguments);
+      return cached[argString] = (cached[argString] || func.apply(this, arguments));
+      /*Uses left-side eval using the OR operator,
+      if cached[serialized] can be converted to a Boolean true, (aka not equal to " ")
+      it returns that, if not it calls the function on the right side.*/ 
       }
-      if(_.contains(store, trip.counter)){
-          return store[trip];
-      } else{
-        return store[counter] = trip;
-        counter ++;
-      }
-    }  
   };
 
 
@@ -359,6 +359,23 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var arrayCopy = array.slice(0)
+    var shuffled = [];
+    var min = 0;
+    var max = array.length - 1;
+
+    function randomInt(){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    while(shuffled.length < array.length){
+      var random1 = randomInt();
+        if(_.every(shuffled, function(value){
+          return value !== arrayCopy[random1];})){
+        shuffled.push(arrayCopy[random1]);
+      }
+    } 
+    return shuffled;
   };
 
 
